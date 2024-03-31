@@ -23,11 +23,15 @@ class Ship:
         return f"Ship from {self.start} to {self.end}"
 
     def create_decks(self) -> list[Deck]:
-        decks = []
-        for row in range(self.start[0], self.end[0] + 1):
-            for column in range(self.start[1], self.end[1] + 1):
-                decks.append(Deck(row, column))
-        return decks
+        # decks = []
+        # for row in range(self.start[0], self.end[0] + 1):
+        #     for column in range(self.start[1], self.end[1] + 1):
+        #         decks.append(Deck(row, column))
+        return [
+            Deck(row, column)
+            for row in range(self.start[0], self.end[0] + 1)
+            for column in range(self.start[1], self.end[1] + 1)
+        ]
 
     def get_deck(self, row: int, column: int) -> Deck:
         # Find the corresponding deck in the list
@@ -51,11 +55,15 @@ class Battleship:
 
     def create_field(self) -> dict[tuple, Ship]:
         # Create a field with the ships
-        field = {}
-        for ship in self.ships:
-            for deck in ship.decks:
-                field[(deck.row, deck.column)] = ship
-        return field
+        # field = {}
+        # for ship in self.ships:
+        #     for deck in ship.decks:
+        #         field[(deck.row, deck.column)] = ship
+        return {
+            (deck.row, deck.column): ship
+            for ship in self.ships
+            for deck in ship.decks
+        }
 
     def fire(self, location: tuple) -> str:
         # Fire at the location
@@ -72,7 +80,15 @@ class Battleship:
         for row in range(10):
             for column in range(10):
                 if (row, column) in self.field:
-                    print(u"\u25A1", end=" ")
+                    if self.field[(row, column)].is_drowned:
+                        print("x", end=" ")
+                    else:
+                        if (self.field[(row, column)]
+                                .get_deck(row, column)
+                                .is_alive):
+                            print(u"\u25A1", end=" ")
+                        else:
+                            print("*", end=" ")
                 else:
                     print("~", end=" ")
             print()
@@ -101,4 +117,7 @@ if __name__ == "__main__":
         battle_ship.fire((0, 2)),  # Hit!
         battle_ship.fire((0, 1)),  # Hit!
         battle_ship.fire((0, 0)),  # Sunk!
+        battle_ship.fire((0, 5)),  # Hit!
     )
+
+    battle_ship.print_field()
