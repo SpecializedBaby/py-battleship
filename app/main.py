@@ -23,10 +23,6 @@ class Ship:
         return f"Ship from {self.start} to {self.end}"
 
     def create_decks(self) -> list[Deck]:
-        # decks = []
-        # for row in range(self.start[0], self.end[0] + 1):
-        #     for column in range(self.start[1], self.end[1] + 1):
-        #         decks.append(Deck(row, column))
         return [
             Deck(row, column)
             for row in range(self.start[0], self.end[0] + 1)
@@ -54,11 +50,6 @@ class Battleship:
         self.field = self.create_field()
 
     def create_field(self) -> dict[tuple, Ship]:
-        # Create a field with the ships
-        # field = {}
-        # for ship in self.ships:
-        #     for deck in ship.decks:
-        #         field[(deck.row, deck.column)] = ship
         return {
             (deck.row, deck.column): ship
             for ship in self.ships
